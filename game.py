@@ -7,6 +7,40 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
+# tile assets
+grass_tile = pygame.image.load('sprites/tilesets/floors/grass.png').convert()
+path_tile = pygame.image.load('sprites/tilesets/floors/wooden.png').convert()
+floor_tile = pygame.image.load('sprites/tilesets/floors/plains.png').convert_alpha()
+
+tile_size = 64
+
+tile_map = [
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0]
+]
+
+# mapping tile assets
+tile_dict = {
+    0: grass_tile,
+    1: path_tile,
+    2: floor_tile
+}
+
+object_sheet = pygame.image.load('sprites/objects/objects.png').convert_alpha()
+
+# position and size of the object to extract
+object_x = 46  # x-coordinate on the sprite sheet
+object_y = 67  # y-coordinate on the sprite sheet
+object_width = 50  # width of the object
+object_height = 78  # height of the object
+
+# extract the object
+object_rect = pygame.Rect(object_x, object_y, object_width, object_height)
+object_image = object_sheet.subsurface(object_rect).copy()
+
 sprite_sheet = pygame.image.load('sprites/characters/player.png').convert_alpha()
 
 frame_width = 64
@@ -15,7 +49,7 @@ frame_height = 64
 def get_frame(sprite_sheet, frame_rect):
     return sprite_sheet.subsurface(frame_rect).copy()
 
-#extract first frame
+#extract first frame of character
 frame_rect = pygame.Rect(0, 0, frame_width, frame_height)
 character_frame = get_frame(sprite_sheet, frame_rect)
 
@@ -33,6 +67,14 @@ camera = pygame.Vector2(0, 0)
 threshhold_x = 200
 threshhold_y = 150
 
+# draw the map
+def draw_map(screen, camera):
+    for y, row in enumerate(tile_map):
+        for x, tile in enumerate(row):
+            if tile in tile_dict:
+                screen.blit(tile_dict[tile], (x * tile_size - camera.x, y * tile_size - camera.y))
+
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -40,6 +82,11 @@ while running:
 
     screen_size.fill("purple")
 
+    # in the main loop, before drawing the player, add:
+    draw_map(screen_size, camera)
+
+    # blit extracted obj, might need adjusting
+    screen_size.blit(object_image, (300 - camera.x, 200 - camera.y))
 
     # Moves the player
     keys = pygame.key.get_pressed()
