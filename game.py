@@ -12,7 +12,7 @@ grass_tile = pygame.image.load('sprites/tilesets/floors/grass.png').convert()
 path_tile = pygame.image.load('sprites/tilesets/floors/wooden.png').convert()
 floor_tile = pygame.image.load('sprites/tilesets/floors/plains.png').convert_alpha()
 
-tile_size = 64
+tile_size = 16
 
 tile_map = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0],
